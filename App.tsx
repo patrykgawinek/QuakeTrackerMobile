@@ -10,9 +10,10 @@ const App = () => {
     "2021-11-16",
     "2021-11-17",
   ]);
-  useEffect(() => {
+
+  const fetchByDate = async () => {
     axios
-      .get(`https://earthquake.usgs.gov/fdsnws/event/1/query`, {
+      .get(`${baseUrlApi}/fdsnws/event/1/query`, {
         params: {
           format: "geojson",
           starttime: earthquakeInterval[0],
@@ -26,6 +27,10 @@ const App = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    fetchByDate();
   }, []); //Empty array to stop useEffect from firing in infinite loop
 
   return (
