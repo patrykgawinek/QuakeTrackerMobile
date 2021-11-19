@@ -11,27 +11,29 @@ const App = () => {
     "2021-11-17",
   ]);
 
-  const fetchByDate = async () => {
-    axios
-      .get(`${baseUrlApi}/fdsnws/event/1/query`, {
-        params: {
-          format: "geojson",
-          starttime: earthquakeInterval[0],
-          endtime: earthquakeInterval[1],
-          limit: 5,
-        },
-      })
-      .then((response) => {
-        setEarthquakeData(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
+    //Function to asynchronously fetch data earthquake from USGS by date and limit the amount
+    const fetchByDate = async () => {
+      axios
+        .get(`${baseUrlApi}/fdsnws/event/1/query`, {
+          params: {
+            format: "geojson",
+            starttime: earthquakeInterval[0],
+            endtime: earthquakeInterval[1],
+            limit: 5,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setEarthquakeData(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     fetchByDate();
-  }, []); //Empty array to stop useEffect from firing in infinite loop
+  }, [earthquakeInterval]); //Track changes on date interval
 
   return (
     <View style={styles.container}>
