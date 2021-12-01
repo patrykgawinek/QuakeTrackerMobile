@@ -2,55 +2,19 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
 import axios, { AxiosResponse } from "axios";
+import FoundFeatures from "./components/FoundFeatures/FoundFeatures";
+import SingleFeature from "./components/SingleFeature/SingleFeature";
 
 const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
-  const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
   const [earthquakeInterval, setEarthquakeInterval] = useState<[string, string]>([
     "2021-11-16",
     "2021-11-17",
   ]);
 
-  useEffect(() => {
-    //Function to asynchronously fetch data earthquake from USGS by date and limit the amount
-    const fetchByDate = async () => {
-      axios
-        .get(`${baseUrlApi}/fdsnws/event/1/query`, {
-          params: {
-            format: "geojson",
-            starttime: earthquakeInterval[0],
-            endtime: earthquakeInterval[1],
-            limit: 5,
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          setEarthquakeData(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-
-    fetchByDate();
-  }, [earthquakeInterval]); //Track changes on date interval
-
   return (
     <View style={styles.container}>
-      {earthquakeData?.data.features.map((feature: any) => (
-        <View style={styles.featureContainer} key={feature.id}>
-          <Text>Place: {feature.properties.place}</Text>
-          <Text>
-            Magnitude(type {feature.properties.magType}): {feature.properties.mag}
-          </Text>
-          <Text
-            style={{ color: "blue" }}
-            onPress={() => Linking.openURL(`${feature.properties.url}`)}
-          >
-            Click here for event details
-          </Text>
-        </View>
-      ))}
+      <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
       <StatusBar style="auto" hidden={true} />
     </View>
   );
@@ -62,15 +26,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "flex-start",
-  },
-  featureContainer: {
-    alignSelf: "stretch",
-    margin: 10,
-    padding: 5,
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    borderTopColor: "black",
-    borderTopWidth: 1,
   },
 });
 
