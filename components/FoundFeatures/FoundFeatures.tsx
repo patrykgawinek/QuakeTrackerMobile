@@ -22,7 +22,6 @@ const FoundFeatures = ({ baseUrlApi, earthquakeInterval }: FoundFeaturesProps) =
           },
         })
         .then((response) => {
-          console.log(response);
           setEarthquakeData(response);
         })
         .catch((error) => {

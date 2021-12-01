@@ -12,9 +12,15 @@ const App = () => {
     "2021-11-17",
   ]);
 
+  const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
+  const showSearch: boolean = false;
+
   return (
     <View style={styles.container}>
-      <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
+      {showSearch && (
+        <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
+      )}
+      {!showSearch && <SingleFeature baseUrlApi={baseUrlApi} selectedFeature={selectedFeature} />}
       <StatusBar style="auto" hidden={true} />
     </View>
   );
