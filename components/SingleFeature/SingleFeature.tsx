@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Linking, StyleSheet, Text, View } from "react-native";
+import { Button, Dimensions, Linking, StyleSheet, Text, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 interface SingleFeatureProps {
   baseUrlApi: string;
@@ -8,7 +9,19 @@ interface SingleFeatureProps {
 }
 
 const SingleFeature = ({ baseUrlApi, selectedFeature }: SingleFeatureProps) => {
-  const [foundFeature, setFoundFeature] = useState<any>();
+  const [foundFeature, setFoundFeature] = useState<any>({
+    properties: {
+      title: "",
+      place: "",
+      time: "",
+      mag: 0,
+      magType: "mg",
+      alert: "none",
+      sig: 0,
+      url: "",
+    },
+    geometry: { coordinates: [0, 0] },
+  });
 
   useEffect(() => {
     axios
@@ -19,7 +32,6 @@ const SingleFeature = ({ baseUrlApi, selectedFeature }: SingleFeatureProps) => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         setFoundFeature(response.data);
       })
       .catch((error) => {
@@ -33,8 +45,19 @@ const SingleFeature = ({ baseUrlApi, selectedFeature }: SingleFeatureProps) => {
       <Text style={styles.featureTime}>
         {new Date(foundFeature?.properties.time).toUTCString()}
       </Text>
-      <View style={styles.mapPlaceholder}>
-        <Text>Map Placeholder</Text>
+      <View style={styles.mapContainer}>
+        <MapView style={styles.map}>
+          <Marker
+            coordinate={{
+              latitude: foundFeature?.geometry.coordinates[1],
+              longitude: foundFeature?.geometry.coordinates[0],
+            }}
+            title={foundFeature?.properties.title}
+            description={`Last updated: ${new Date(
+              foundFeature?.properties.updated
+            ).toUTCString()}`}
+          />
+        </MapView>
       </View>
       <View style={styles.featureData}>
         <View style={styles.propertyContainer}>
@@ -79,16 +102,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
   },
-  mapPlaceholder: {
-    height: "30%",
+  mapContainer: {
+    height: "50%",
     marginTop: "5%",
     marginBottom: "5%",
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
-    borderTopColor: "black",
-    borderTopWidth: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  map: {
+    width: "100%",
+    height: "100%",
   },
   featureData: {
     flexDirection: "row",
