@@ -7,8 +7,12 @@ interface FoundFeaturesProps {
   earthquakeInterval: [string, string];
 }
 
-const FoundFeatures = ({ baseUrlApi, earthquakeInterval }: FoundFeaturesProps) => {
-  const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
+const FoundFeatures = ({
+  baseUrlApi,
+  earthquakeInterval,
+}: FoundFeaturesProps) => {
+  const [earthquakeData, setEarthquakeData] =
+    useState<AxiosResponse<any, any>>();
   useEffect(() => {
     //Function to asynchronously fetch data earthquake from USGS by date and limit the amount
     const fetchByDate = async () => {
@@ -38,7 +42,8 @@ const FoundFeatures = ({ baseUrlApi, earthquakeInterval }: FoundFeaturesProps) =
         <View style={styles.featureContainer} key={feature.id}>
           <Text>Place: {feature.properties.place}</Text>
           <Text>
-            Magnitude(type {feature.properties.magType}): {feature.properties.mag}
+            Magnitude(type {feature.properties.magType}):{" "}
+            {feature.properties.mag}
           </Text>
           <Text
             style={{ color: "blue" }}
