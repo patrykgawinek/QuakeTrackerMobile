@@ -9,11 +9,13 @@ import SearchForm from "./components/SearchForm/SearchForm";
 
 const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
+
   const [earthquakeInterval, setEarthquakeInterval] = useState<[Date, Date]>([
     new Date("2021-11-16"),
     new Date("2021-11-17"),
   ]);
   const [circleDistance, setCircleDistance] = useState<[number, number, number]>([55, 5, 100]);
+  const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([0, 10]);
 
   const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
   const showSearch: boolean = true;
@@ -25,6 +27,8 @@ const App = () => {
         setEarthquakeInterval={setEarthquakeInterval}
         circleDistance={circleDistance}
         setCircleDistance={setCircleDistance}
+        magnitudeRange={magnitudeRange}
+        setMagnitudeRange={setMagnitudeRange}
       />
       {showSearch && (
         <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
