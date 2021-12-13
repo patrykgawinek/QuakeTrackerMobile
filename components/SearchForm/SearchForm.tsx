@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, TextInput } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 interface SearchFormProps {
   earthquakeInterval: [Date, Date];
   setEarthquakeInterval: React.Dispatch<React.SetStateAction<[Date, Date]>>;
+  circleDistance: [number, number, number];
+  setCircleDistance: React.Dispatch<React.SetStateAction<[number, number, number]>>;
 }
 
-const SearchForm = ({ earthquakeInterval, setEarthquakeInterval }: SearchFormProps) => {
+const SearchForm = ({
+  earthquakeInterval,
+  setEarthquakeInterval,
+  circleDistance,
+  setCircleDistance,
+}: SearchFormProps) => {
   //Datepicker usestates
   const [isDatePickerVisible, setDatePickerVisible] = useState<[boolean, boolean]>([false, false]);
   const showDatePicker = (id: number) => {
@@ -29,7 +36,15 @@ const SearchForm = ({ earthquakeInterval, setEarthquakeInterval }: SearchFormPro
     hideDatePickers();
   };
 
-  useEffect(() => {}, [earthquakeInterval]);
+  const handleDistanceChange = (text: string) => {
+    if (text === "") {
+      text = "0";
+    }
+    setCircleDistance([55, 5, parseInt(text.replace(/[^0-9]/g, ""))]);
+  };
+
+  //Re-render component on change of useStates
+  useEffect(() => {}, [earthquakeInterval, circleDistance[2]]);
 
   return (
     <View>
@@ -43,6 +58,8 @@ const SearchForm = ({ earthquakeInterval, setEarthquakeInterval }: SearchFormPro
           onConfirm={(datetime: Date) => handleConfirm(datetime, 0)}
           onCancel={hideDatePickers}
         />
+      </View>
+      <View>
         <Text>To</Text>
         <Button title={earthquakeInterval[1].toLocaleString()} onPress={() => showDatePicker(1)} />
         <DateTimePicker
@@ -50,6 +67,15 @@ const SearchForm = ({ earthquakeInterval, setEarthquakeInterval }: SearchFormPro
           mode="datetime"
           onConfirm={(datetime: Date) => handleConfirm(datetime, 1)}
           onCancel={hideDatePickers}
+        />
+      </View>
+      <View>
+        <Text>Distance (in km)</Text>
+        <TextInput
+          keyboardType="numeric"
+          onChangeText={(text) => handleDistanceChange(text)}
+          value={circleDistance[2].toString()}
+          maxLength={10} //setting limit of input
         />
       </View>
     </View>

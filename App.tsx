@@ -13,6 +13,7 @@ const App = () => {
     new Date("2021-11-16"),
     new Date("2021-11-17"),
   ]);
+  const [circleDistance, setCircleDistance] = useState<[number, number, number]>([55, 5, 100]);
 
   const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
   const showSearch: boolean = true;
@@ -22,6 +23,8 @@ const App = () => {
       <SearchForm
         earthquakeInterval={earthquakeInterval}
         setEarthquakeInterval={setEarthquakeInterval}
+        circleDistance={circleDistance}
+        setCircleDistance={setCircleDistance}
       />
       {showSearch && (
         <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
