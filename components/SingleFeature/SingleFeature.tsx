@@ -46,7 +46,15 @@ const SingleFeature = ({ baseUrlApi, selectedFeature }: SingleFeatureProps) => {
         {new Date(foundFeature?.properties.time).toUTCString()}
       </Text>
       <View style={styles.mapContainer}>
-        <MapView style={styles.map}>
+        <MapView
+          style={styles.map}
+          region={{
+            latitude: foundFeature?.geometry.coordinates[1],
+            longitude: foundFeature?.geometry.coordinates[0],
+            latitudeDelta: 50,
+            longitudeDelta: 50,
+          }}
+        >
           <Marker
             coordinate={{
               latitude: foundFeature?.geometry.coordinates[1],
