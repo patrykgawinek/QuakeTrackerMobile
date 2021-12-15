@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { AlertLevel } from "../../types";
 import RadioButton from "../RadioButton/RadioButton";
 
@@ -9,14 +9,23 @@ interface AlertLevelPickProps {
 }
 
 const AlertLevelPick = ({ alertLevel, setAlertLevel }: AlertLevelPickProps) => {
+  //Get numeric values of enum dynamically
+  const alertLevelValues = Object.keys(AlertLevel)
+    .filter((value) => !isNaN(Number(value)))
+    .map((value) => parseInt(value));
+
   return (
     <View>
       <Text>Alert Level</Text>
-      {(Object.keys(AlertLevel) as Array<keyof typeof AlertLevel>).map((key) => (
-        <View key={key}>
-          <RadioButton selected={true} />
-          <Text>{key}</Text>
-        </View>
+      {alertLevelValues.map((value) => (
+        <TouchableOpacity
+          onPress={() => {
+            setAlertLevel(value);
+          }}
+        >
+          <RadioButton selected={alertLevel === value} />
+          <Text>{AlertLevel[value]}</Text>
+        </TouchableOpacity>
       ))}
     </View>
   );
