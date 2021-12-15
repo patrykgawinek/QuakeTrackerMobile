@@ -1,6 +1,6 @@
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import React, { useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { MagnitudeRange } from "../../types";
 
 interface MagnitudePickProps {
@@ -37,5 +37,7 @@ const MagnitudePick = ({ magnitudeRange, setMagnitudeRange }: MagnitudePickProps
     </View>
   );
 };
+
+const styles = StyleSheet.create({});
 
 export default MagnitudePick;

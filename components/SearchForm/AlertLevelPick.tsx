@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { AlertLevel } from "../../types";
-import RadioButton from "../RadioButton/RadioButton";
+import RadioButton from "./RadioButton";
 
 interface AlertLevelPickProps {
   alertLevel: AlertLevel;
@@ -30,5 +30,7 @@ const AlertLevelPick = ({ alertLevel, setAlertLevel }: AlertLevelPickProps) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({});
 
 export default AlertLevelPick;

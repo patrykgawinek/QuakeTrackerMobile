@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, View, Text } from "react-native";
+import { Button, View, Text, StyleSheet } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { TimeInterval } from "../../types";
 
@@ -56,5 +56,7 @@ const TimePick = ({ earthquakeInterval, setEarthquakeInterval }: TimePickProps) 
     </View>
   );
 };
+
+const styles = StyleSheet.create({});
 
 export default TimePick;
