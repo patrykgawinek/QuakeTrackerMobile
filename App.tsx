@@ -5,7 +5,7 @@ import SingleFeature from "./components/SingleFeature/SingleFeature";
 import SearchForm from "./components/SearchForm/SearchForm";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { CircleDistance, MagnitudeRange, TimeInterval } from "./types";
+import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./types";
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
@@ -28,27 +28,31 @@ const App = () => {
     minimum: -1,
     maximum: 10,
   });
+  const [alertLevel, setAlertLevel] = useState<AlertLevel>(AlertLevel.Green);
 
   const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
 
   return (
-    <FoundFeaturesContext.Provider
+    <SearchFeaturesContext.Provider
       value={{
-        baseUrlApi: baseUrlApi,
-        earthquakeInterval: earthquakeInterval,
-        circleDistance: circleDistance,
-        magnitudeRange: magnitudeRange,
-        setSelectedFeature: setSelectedFeature,
+        earthquakeInterval,
+        setEarthquakeInterval,
+        circleDistance,
+        setCircleDistance,
+        magnitudeRange,
+        setMagnitudeRange,
+        alertLevel,
+        setAlertLevel,
       }}
     >
-      <SearchFeaturesContext.Provider
+      <FoundFeaturesContext.Provider
         value={{
-          earthquakeInterval,
-          setEarthquakeInterval,
-          circleDistance,
-          setCircleDistance,
-          magnitudeRange,
-          setMagnitudeRange,
+          baseUrlApi: baseUrlApi,
+          earthquakeInterval: earthquakeInterval,
+          circleDistance: circleDistance,
+          magnitudeRange: magnitudeRange,
+          setSelectedFeature: setSelectedFeature,
+          alertLevel,
         }}
       >
         <SingleFeatureContext.Provider
@@ -65,8 +69,8 @@ const App = () => {
             </Stack.Navigator>
           </NavigationContainer>
         </SingleFeatureContext.Provider>
-      </SearchFeaturesContext.Provider>
-    </FoundFeaturesContext.Provider>
+      </FoundFeaturesContext.Provider>
+    </SearchFeaturesContext.Provider>
   );
 };
 

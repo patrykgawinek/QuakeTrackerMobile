@@ -13,3 +13,10 @@ export interface MagnitudeRange {
   minimum: number;
   maximum: number;
 }
+
+export enum AlertLevel {
+  "Green",
+  "Yellow",
+  "Orange",
+  "Red",
+}

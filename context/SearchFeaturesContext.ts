@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { CircleDistance, MagnitudeRange, TimeInterval } from "../types";
+import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "../types";
 
 //Context for search features
 interface SearchFeaturesContextInterface {
@@ -9,6 +9,8 @@ interface SearchFeaturesContextInterface {
   setCircleDistance: React.Dispatch<React.SetStateAction<CircleDistance>>;
   magnitudeRange: MagnitudeRange;
   setMagnitudeRange: React.Dispatch<React.SetStateAction<MagnitudeRange>>;
+  alertLevel: AlertLevel;
+  setAlertLevel: React.Dispatch<React.SetStateAction<AlertLevel>>;
 }
 export const SearchFeaturesContext = createContext<SearchFeaturesContextInterface>({
   earthquakeInterval: { since: new Date("2021-11-16"), to: new Date("2021-11-17") },
@@ -22,5 +24,9 @@ export const SearchFeaturesContext = createContext<SearchFeaturesContextInterfac
   magnitudeRange: { minimum: -1, maximum: 10 },
   setMagnitudeRange: () => {
     throw new Error("No magnitude range hook available");
+  },
+  alertLevel: AlertLevel.Green,
+  setAlertLevel: () => {
+    throw new Error("No alert level hook available");
   },
 });
