@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../../context/FoundFeaturesContext";
 
 const FoundFeatures = () => {
@@ -13,10 +14,10 @@ const FoundFeatures = () => {
           format: "geojson",
           starttime: earthquakeInterval.since.toUTCString(),
           endtime: earthquakeInterval.to.toUTCString(),
-          limit: 5,
         },
       })
       .then((response) => {
+        console.log(response.data.metadata.count);
         setEarthquakeData(response);
       })
       .catch((error) => {
@@ -26,20 +27,22 @@ const FoundFeatures = () => {
 
   return (
     <View>
-      {earthquakeData?.data.features.map((feature: any) => (
-        <View style={styles.featureContainer} key={feature.id}>
-          <Text>Place: {feature.properties.place}</Text>
-          <Text>
-            Magnitude(type {feature.properties.magType}): {feature.properties.mag}
-          </Text>
-          <Text
-            style={{ color: "blue" }}
-            onPress={() => Linking.openURL(`${feature.properties.url}`)}
-          >
-            Click here for event details
-          </Text>
-        </View>
-      ))}
+      <ScrollView>
+        {earthquakeData?.data.features.map((feature: any) => (
+          <View style={styles.featureContainer} key={feature.id}>
+            <Text>Place: {feature.properties.place}</Text>
+            <Text>
+              Magnitude(type {feature.properties.magType}): {feature.properties.mag}
+            </Text>
+            <Text
+              style={{ color: "blue" }}
+              onPress={() => Linking.openURL(`${feature.properties.url}`)}
+            >
+              Click here for event details
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
