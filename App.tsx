@@ -62,10 +62,10 @@ const App = () => {
           }}
         >
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Features">
-              <Stack.Screen name="Search Ffeatures" component={SearchForm} />
-              <Stack.Screen name="Found features" component={FoundFeatures} />
-              <Stack.Screen name="Last selected feature" component={SingleFeature} />
+            <Stack.Navigator initialRouteName="Earthquakes">
+              <Stack.Screen name="Search Earthquakes" component={SearchForm} />
+              <Stack.Screen name="Found Earthquakes" component={FoundFeatures} />
+              <Stack.Screen name="Last Selected Eartquake" component={SingleFeature} />
             </Stack.Navigator>
           </NavigationContainer>
         </SingleFeatureContext.Provider>
