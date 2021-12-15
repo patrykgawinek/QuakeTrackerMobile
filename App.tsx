@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
 import axios, { AxiosResponse } from "axios";
 import FoundFeatures from "./components/FoundFeatures/FoundFeatures";
 import SingleFeature from "./components/SingleFeature/SingleFeature";
 import Header from "./components/Header/Header";
 import SearchForm from "./components/SearchForm/SearchForm";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, RouteProp, useRoute } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 /*
@@ -29,6 +29,21 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 */
 const Stack = createDrawerNavigator();
 
+//Context for search features
+export const Features = createContext<any>({
+  baseUrlApi: "https://earthquake.usgs.gov",
+  earthquakeInterval: [new Date("2021-11-16"), new Date("2021-11-17")],
+  setEarthquakeInterval: "",
+  circleDistance: [0, 0, 100],
+  setCircleDistance: "",
+  magnitudeRange: [-1, 10],
+  setMagnitudeRange: "",
+  selectedFeature: "",
+  setSelectedFeature: "",
+});
+
+//Context for single feature
+
 const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
 
@@ -42,11 +57,27 @@ const App = () => {
   const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Search">
-        <Stack.Screen name="Search" component={FoundFeatures} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Features.Provider
+      value={{
+        baseUrlApi: baseUrlApi,
+        earthquakeInterval: earthquakeInterval,
+        setEarthquakeInterval: setEarthquakeInterval,
+        circleDistance: circleDistance,
+        setCircleDistance: setCircleDistance,
+        magnitudeRange: magnitudeRange,
+        setMagnitudeRange: setMagnitudeRange,
+        selectedFeature: selectedFeature,
+        setSelectedFeature: setSelectedFeature,
+      }}
+    >
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Features">
+          <Stack.Screen name="Search Ffeatures" component={SearchForm} />
+          <Stack.Screen name="Found features" component={FoundFeatures} />
+          <Stack.Screen name="Last selected feature" component={SingleFeature} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Features.Provider>
   );
 };
 

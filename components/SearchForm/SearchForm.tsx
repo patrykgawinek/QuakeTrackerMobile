@@ -1,25 +1,19 @@
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Button, TextInput, ScrollView } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
+import { Features } from "../../App";
 
-interface SearchFormProps {
-  earthquakeInterval: [Date, Date];
-  setEarthquakeInterval: React.Dispatch<React.SetStateAction<[Date, Date]>>;
-  circleDistance: [number, number, number];
-  setCircleDistance: React.Dispatch<React.SetStateAction<[number, number, number]>>;
-  magnitudeRange: [number, number];
-  setMagnitudeRange: React.Dispatch<React.SetStateAction<[number, number]>>;
-}
+const SearchForm = () => {
+  const {
+    earthquakeInterval,
+    setEarthquakeInterval,
+    circleDistance,
+    setCircleDistance,
+    magnitudeRange,
+    setMagnitudeRange,
+  } = useContext(Features);
 
-const SearchForm = ({
-  earthquakeInterval,
-  setEarthquakeInterval,
-  circleDistance,
-  setCircleDistance,
-  magnitudeRange,
-  setMagnitudeRange,
-}: SearchFormProps) => {
   //Datepicker usestates
   const [isDatePickerVisible, setDatePickerVisible] = useState<[boolean, boolean]>([false, false]);
   const showDatePicker = (id: number) => {

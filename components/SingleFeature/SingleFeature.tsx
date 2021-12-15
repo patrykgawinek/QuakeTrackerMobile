@@ -1,14 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Dimensions, Linking, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { Features } from "../../App";
 
-interface SingleFeatureProps {
-  baseUrlApi: string;
-  selectedFeature: string;
-}
-
-const SingleFeature = ({ baseUrlApi, selectedFeature }: SingleFeatureProps) => {
+const SingleFeature = () => {
+  const { baseUrlApi, selectedFeature } = useContext(Features);
   const [foundFeature, setFoundFeature] = useState<any>({
     properties: {
       title: "",

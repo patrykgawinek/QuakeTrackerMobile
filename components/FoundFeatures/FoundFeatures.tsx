@@ -1,13 +1,10 @@
 import axios, { AxiosResponse } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
+import { Features } from "../../App";
 
-interface FoundFeaturesProps {
-  baseUrlApi: string;
-  earthquakeInterval: [Date, Date];
-}
-
-const FoundFeatures = ({ baseUrlApi, earthquakeInterval }: FoundFeaturesProps) => {
+const FoundFeatures = () => {
+  const { baseUrlApi, earthquakeInterval } = useContext(Features);
   const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
   useEffect(() => {
     //Function to asynchronously fetch data earthquake from USGS by date and limit the amount
