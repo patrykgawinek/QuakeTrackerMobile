@@ -1,36 +1,31 @@
 import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
-import { Features } from "../../App";
+import { FoundFeaturesContext } from "../../context/FoundFeaturesContext";
 
 const FoundFeatures = () => {
-  const { baseUrlApi, earthquakeInterval } = useContext(Features);
+  const { baseUrlApi, earthquakeInterval } = useContext(FoundFeaturesContext);
   const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
   useEffect(() => {
-    //Function to asynchronously fetch data earthquake from USGS by date and limit the amount
-    const fetchByDate = async () => {
-      axios
-        .get(`${baseUrlApi}/fdsnws/event/1/query`, {
-          params: {
-            format: "geojson",
-            starttime: earthquakeInterval[0].toUTCString(),
-            endtime: earthquakeInterval[1].toUTCString(),
-            limit: 5,
-          },
-        })
-        .then((response) => {
-          setEarthquakeData(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-
-    fetchByDate();
+    axios
+      .get(`${baseUrlApi}/fdsnws/event/1/query`, {
+        params: {
+          format: "geojson",
+          starttime: earthquakeInterval.since.toUTCString(),
+          endtime: earthquakeInterval.to.toUTCString(),
+          limit: 5,
+        },
+      })
+      .then((response) => {
+        setEarthquakeData(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, [earthquakeInterval]); //Track changes on date interval
 
   return (
-    <>
+    <View>
       {earthquakeData?.data.features.map((feature: any) => (
         <View style={styles.featureContainer} key={feature.id}>
           <Text>Place: {feature.properties.place}</Text>
@@ -45,7 +40,7 @@ const FoundFeatures = () => {
           </Text>
         </View>
       ))}
-    </>
+    </View>
   );
 };
 

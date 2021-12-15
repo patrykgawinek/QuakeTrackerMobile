@@ -1,83 +1,72 @@
-import { StatusBar } from "expo-status-bar";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Linking, StyleSheet, Text, View } from "react-native";
-import axios, { AxiosResponse } from "axios";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
 import FoundFeatures from "./components/FoundFeatures/FoundFeatures";
 import SingleFeature from "./components/SingleFeature/SingleFeature";
-import Header from "./components/Header/Header";
 import SearchForm from "./components/SearchForm/SearchForm";
-import { NavigationContainer, RouteProp, useRoute } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { CircleDistance, MagnitudeRange, TimeInterval } from "./types";
+import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
+import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
+import { SingleFeatureContext } from "./context/SingleFeatureContext";
 
-/*
-    <View style={styles.container}>
-      <SearchForm
-        earthquakeInterval={earthquakeInterval}
-        setEarthquakeInterval={setEarthquakeInterval}
-        circleDistance={circleDistance}
-        setCircleDistance={setCircleDistance}
-        magnitudeRange={magnitudeRange}
-        setMagnitudeRange={setMagnitudeRange}
-      />
-      {showSearch && (
-        <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
-      )}
-      {!showSearch && <SingleFeature baseUrlApi={baseUrlApi} selectedFeature={selectedFeature} />}
-      <Header />
-      <StatusBar style="auto" hidden={true} />
-    </View>
-*/
 const Stack = createDrawerNavigator();
-
-//Context for search features
-export const Features = createContext<any>({
-  baseUrlApi: "https://earthquake.usgs.gov",
-  earthquakeInterval: [new Date("2021-11-16"), new Date("2021-11-17")],
-  setEarthquakeInterval: "",
-  circleDistance: [0, 0, 100],
-  setCircleDistance: "",
-  magnitudeRange: [-1, 10],
-  setMagnitudeRange: "",
-  selectedFeature: "",
-  setSelectedFeature: "",
-});
-
-//Context for single feature
 
 const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
 
-  const [earthquakeInterval, setEarthquakeInterval] = useState<[Date, Date]>([
-    new Date("2021-11-16"),
-    new Date("2021-11-17"),
-  ]);
-  const [circleDistance, setCircleDistance] = useState<[number, number, number]>([55, 5, 100]);
-  const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([0, 10]);
+  const [earthquakeInterval, setEarthquakeInterval] = useState<TimeInterval>({
+    since: new Date("2021-11-16"),
+    to: new Date("2021-11-17"),
+  });
+  const [circleDistance, setCircleDistance] = useState<CircleDistance>({
+    latitude: 55,
+    longitude: 5,
+    distance: 100,
+  });
+  const [magnitudeRange, setMagnitudeRange] = useState<MagnitudeRange>({
+    minimum: -1,
+    maximum: 10,
+  });
 
   const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
 
   return (
-    <Features.Provider
+    <FoundFeaturesContext.Provider
       value={{
         baseUrlApi: baseUrlApi,
         earthquakeInterval: earthquakeInterval,
-        setEarthquakeInterval: setEarthquakeInterval,
         circleDistance: circleDistance,
-        setCircleDistance: setCircleDistance,
         magnitudeRange: magnitudeRange,
-        setMagnitudeRange: setMagnitudeRange,
-        selectedFeature: selectedFeature,
         setSelectedFeature: setSelectedFeature,
       }}
     >
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Features">
-          <Stack.Screen name="Search Ffeatures" component={SearchForm} />
-          <Stack.Screen name="Found features" component={FoundFeatures} />
-          <Stack.Screen name="Last selected feature" component={SingleFeature} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Features.Provider>
+      <SearchFeaturesContext.Provider
+        value={{
+          earthquakeInterval,
+          setEarthquakeInterval,
+          circleDistance,
+          setCircleDistance,
+          magnitudeRange,
+          setMagnitudeRange,
+        }}
+      >
+        <SingleFeatureContext.Provider
+          value={{
+            baseUrlApi,
+            selectedFeature,
+          }}
+        >
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Features">
+              <Stack.Screen name="Search Ffeatures" component={SearchForm} />
+              <Stack.Screen name="Found features" component={FoundFeatures} />
+              <Stack.Screen name="Last selected feature" component={SingleFeature} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SingleFeatureContext.Provider>
+      </SearchFeaturesContext.Provider>
+    </FoundFeaturesContext.Provider>
   );
 };
 

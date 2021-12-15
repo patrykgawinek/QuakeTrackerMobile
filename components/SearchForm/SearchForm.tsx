@@ -2,7 +2,7 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Button, TextInput, ScrollView } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { Features } from "../../App";
+import { SearchFeaturesContext } from "../../context/SearchFeaturesContext";
 
 const SearchForm = () => {
   const {
@@ -12,7 +12,7 @@ const SearchForm = () => {
     setCircleDistance,
     magnitudeRange,
     setMagnitudeRange,
-  } = useContext(Features);
+  } = useContext(SearchFeaturesContext);
 
   //Datepicker usestates
   const [isDatePickerVisible, setDatePickerVisible] = useState<[boolean, boolean]>([false, false]);
@@ -28,9 +28,9 @@ const SearchForm = () => {
   };
   const handleConfirm = (datetime: Date, id: number) => {
     if (id === 0) {
-      setEarthquakeInterval([datetime, earthquakeInterval[1]]);
+      setEarthquakeInterval({ since: datetime, to: earthquakeInterval.to });
     } else {
-      setEarthquakeInterval([earthquakeInterval[0], datetime]);
+      setEarthquakeInterval({ since: earthquakeInterval.since, to: datetime });
     }
     hideDatePickers();
   };
@@ -39,7 +39,11 @@ const SearchForm = () => {
     if (text === "") {
       text = "0";
     }
-    setCircleDistance([55, 5, parseInt(text.replace(/[^0-9]/g, ""))]);
+    setCircleDistance({
+      latitude: 55,
+      longitude: 5,
+      distance: parseInt(text.replace(/[^0-9]/g, "")),
+    });
   };
 
   const [scrollEnabled, setScrollEnabled] = useState<boolean>(false);
@@ -47,14 +51,17 @@ const SearchForm = () => {
   const disableScroll = () => setScrollEnabled(false);
 
   //Re-render component on change of useStates
-  useEffect(() => {}, [earthquakeInterval, circleDistance[2]]);
+  useEffect(() => {}, [earthquakeInterval, circleDistance.distance]);
 
   return (
     <View>
       <Text>Search Earthquakes</Text>
       <View>
         <Text>Since</Text>
-        <Button title={earthquakeInterval[0].toLocaleString()} onPress={() => showDatePicker(0)} />
+        <Button
+          title={earthquakeInterval.since.toLocaleString()}
+          onPress={() => showDatePicker(0)}
+        />
         <DateTimePicker
           isVisible={isDatePickerVisible[0]}
           mode="datetime"
@@ -64,7 +71,7 @@ const SearchForm = () => {
       </View>
       <View>
         <Text>To</Text>
-        <Button title={earthquakeInterval[1].toLocaleString()} onPress={() => showDatePicker(1)} />
+        <Button title={earthquakeInterval.to.toLocaleString()} onPress={() => showDatePicker(1)} />
         <DateTimePicker
           isVisible={isDatePickerVisible[1]}
           mode="datetime"
@@ -77,21 +84,21 @@ const SearchForm = () => {
         <TextInput
           keyboardType="numeric"
           onChangeText={(text) => handleDistanceChange(text)}
-          value={circleDistance[2].toString()}
+          value={circleDistance.distance.toString()}
           maxLength={10} //setting limit of input
         />
       </View>
       <View>
         <Text>Magnitude</Text>
-        <Text>Min: {magnitudeRange[0].toFixed(1)}</Text>
-        <Text>Max: {magnitudeRange[1].toFixed(1)}</Text>
+        <Text>Min: {magnitudeRange.minimum.toFixed(1)}</Text>
+        <Text>Max: {magnitudeRange.maximum.toFixed(1)}</Text>
         <ScrollView scrollEnabled={scrollEnabled}>
           <MultiSlider
-            values={[magnitudeRange[0], magnitudeRange[1]]}
+            values={[magnitudeRange.minimum, magnitudeRange.maximum]}
             onValuesChangeStart={disableScroll}
             onValuesChangeFinish={enableScroll}
             onValuesChange={(values) => {
-              setMagnitudeRange([values[0], values[1]]);
+              setMagnitudeRange({ minimum: values[0], maximum: values[1] });
             }}
             enableLabel
             allowOverlap
