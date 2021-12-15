@@ -1,14 +1,29 @@
 import React, { useState } from "react";
-import { Button, View, Text, StyleSheet } from "react-native";
+import {
+  Button,
+  View,
+  Text,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+} from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { TimeInterval } from "../../types";
 
 interface TimePickProps {
+  titleStyle: StyleProp<TextStyle>;
+  textStyle: StyleProp<TextStyle>;
   earthquakeInterval: TimeInterval;
   setEarthquakeInterval: React.Dispatch<React.SetStateAction<TimeInterval>>;
 }
 
-const TimePick = ({ earthquakeInterval, setEarthquakeInterval }: TimePickProps) => {
+const TimePick = ({
+  titleStyle,
+  textStyle,
+  earthquakeInterval,
+  setEarthquakeInterval,
+}: TimePickProps) => {
   const [isDatePickerVisible, setDatePickerVisible] = useState<[boolean, boolean]>([false, false]);
   const showDatePicker = (id: number) => {
     if (id === 0) {
@@ -30,12 +45,11 @@ const TimePick = ({ earthquakeInterval, setEarthquakeInterval }: TimePickProps) 
   };
   return (
     <View>
-      <View>
-        <Text>Since</Text>
-        <Button
-          title={earthquakeInterval.since.toLocaleString()}
-          onPress={() => showDatePicker(0)}
-        />
+      <View style={styles.timeContainer}>
+        <Text style={[titleStyle, styles.timeTitle]}>Since</Text>
+        <TouchableOpacity onPress={() => showDatePicker(0)} style={styles.timeTouchable}>
+          <Text style={textStyle}>{earthquakeInterval.since.toLocaleString()}</Text>
+        </TouchableOpacity>
         <DateTimePicker
           isVisible={isDatePickerVisible[0]}
           mode="datetime"
@@ -43,9 +57,11 @@ const TimePick = ({ earthquakeInterval, setEarthquakeInterval }: TimePickProps) 
           onCancel={hideDatePickers}
         />
       </View>
-      <View>
-        <Text>To</Text>
-        <Button title={earthquakeInterval.to.toLocaleString()} onPress={() => showDatePicker(1)} />
+      <View style={styles.timeContainer}>
+        <Text style={[titleStyle, styles.timeTitle]}>To</Text>
+        <TouchableOpacity onPress={() => showDatePicker(1)} style={styles.timeTouchable}>
+          <Text style={textStyle}>{earthquakeInterval.to.toLocaleString()}</Text>
+        </TouchableOpacity>
         <DateTimePicker
           isVisible={isDatePickerVisible[1]}
           mode="datetime"
@@ -57,6 +73,24 @@ const TimePick = ({ earthquakeInterval, setEarthquakeInterval }: TimePickProps) 
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  timeContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingBottom: 15,
+  },
+  timeTitle: {
+    width: 50,
+  },
+  timeTouchable: {
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 5,
+    flex: 1,
+    alignItems: "center",
+  },
+});
 
 export default TimePick;
