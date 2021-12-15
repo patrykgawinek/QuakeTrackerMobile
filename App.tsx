@@ -11,8 +11,8 @@ const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
 
   const [earthquakeInterval, setEarthquakeInterval] = useState<[Date, Date]>([
-    new Date("2021-11-16"),
-    new Date("2021-11-17"),
+    new Date("2021-12-01"),
+    new Date("2021-12-02"),
   ]);
   const [circleDistance, setCircleDistance] = useState<[number, number, number]>([55, 5, 100]);
   const [magnitudeRange, setMagnitudeRange] = useState<[number, number]>([0, 10]);
@@ -22,6 +22,9 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      {showSearch && (
+        <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
+      )}
       <SearchForm
         earthquakeInterval={earthquakeInterval}
         setEarthquakeInterval={setEarthquakeInterval}
@@ -30,9 +33,6 @@ const App = () => {
         magnitudeRange={magnitudeRange}
         setMagnitudeRange={setMagnitudeRange}
       />
-      {showSearch && (
-        <FoundFeatures baseUrlApi={baseUrlApi} earthquakeInterval={earthquakeInterval} />
-      )}
       {!showSearch && <SingleFeature baseUrlApi={baseUrlApi} selectedFeature={selectedFeature} />}
       <Header />
       <StatusBar style="auto" hidden={true} />
