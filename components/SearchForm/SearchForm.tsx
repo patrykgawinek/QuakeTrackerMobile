@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Button } from "react-native";
 import { SearchFeaturesContext } from "../../context/SearchFeaturesContext";
 import AlertLevelPick from "./AlertLevelPick";
 import DistancePick from "./DistancePick";

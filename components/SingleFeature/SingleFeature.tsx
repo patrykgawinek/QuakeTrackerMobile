@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Dimensions, Linking, StyleSheet, Text, View } from "react-native";
+import { Button, Linking, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SingleFeatureContext } from "../../context/SingleFeatureContext";
 
