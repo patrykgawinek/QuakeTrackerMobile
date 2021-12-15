@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SearchFeaturesContext } from "../../context/SearchFeaturesContext";
 import AlertLevelPick from "./AlertLevelPick";
 import DistancePick from "./DistancePick";
@@ -22,8 +22,7 @@ const SearchForm = () => {
   useEffect(() => {}, [earthquakeInterval, circleDistance.distance]);
 
   return (
-    <View>
-      <Text>Search Earthquakes</Text>
+    <View style={styles.container}>
       <TimePick
         earthquakeInterval={earthquakeInterval}
         setEarthquakeInterval={setEarthquakeInterval}
@@ -34,5 +33,13 @@ const SearchForm = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    alignSelf: "stretch",
+    margin: 10,
+    padding: 5,
+  },
+});
 
 export default SearchForm;
