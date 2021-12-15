@@ -11,10 +11,7 @@ interface NavigationProps {
 function HomeScreen({ navigation }: NavigationProps) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button
-        onPress={() => navigation.navigate("Notifications")}
-        title="Go to notifications"
-      />
+      <Button onPress={() => navigation.navigate("Notifications")} title="Go to notifications" />
     </View>
   );
 }
