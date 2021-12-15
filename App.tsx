@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import FoundFeatures from "./components/FoundFeatures/FoundFeatures";
 import SingleFeature from "./components/SingleFeature/SingleFeature";
 import SearchForm from "./components/SearchForm/SearchForm";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import * as Location from "expo-location";
 import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./types";
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
@@ -31,6 +32,24 @@ const App = () => {
   const [alertLevel, setAlertLevel] = useState<AlertLevel>(AlertLevel.Green);
 
   const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({ accuracy: 3 });
+      console.log(location);
+      setCircleDistance({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        distance: circleDistance.distance,
+      });
+    })();
+  }, []);
 
   return (
     <SearchFeaturesContext.Provider
