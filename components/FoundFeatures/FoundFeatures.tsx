@@ -17,7 +17,6 @@ const FoundFeatures = () => {
         },
       })
       .then((response) => {
-        console.log(response.data.metadata.count);
         setEarthquakeData(response);
       })
       .catch((error) => {
