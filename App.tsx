@@ -5,6 +5,7 @@ import SingleFeature from "./components/SingleFeature/SingleFeature";
 import SearchForm from "./components/SearchForm/SearchForm";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./types";
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
@@ -31,7 +32,32 @@ const App = () => {
   });
   const [alertLevel, setAlertLevel] = useState<AlertLevel>(AlertLevel.Green);
 
-  const [selectedFeature, setSelectedFeature] = useState<string>("us6000g7ri");
+  const [selectedFeature, setSelectedFeature] = useState<string>("");
+  //Read last selected on mount
+  const readSelectedFeature = async () => {
+    try {
+      const selected = await AsyncStorage.getItem("selectedFeature");
+      if (selected !== undefined && selected !== null) {
+        setSelectedFeature(JSON.parse(selected));
+      }
+    } catch (e) {
+      console.log("Something went wrong when reading data from storage!");
+    }
+  };
+  useEffect(() => {
+    readSelectedFeature();
+  }, []);
+  //Save last selected
+  const storeSelectedFeature = async () => {
+    try {
+      await AsyncStorage.setItem("selectedFeature", JSON.stringify(selectedFeature));
+    } catch (e) {
+      console.log("Something went wrong when getting data from storage!");
+    }
+  };
+  useEffect(() => {
+    storeSelectedFeature();
+  }, [selectedFeature]);
 
   useEffect(() => {
     (async () => {
