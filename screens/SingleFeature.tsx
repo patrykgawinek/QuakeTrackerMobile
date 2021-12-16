@@ -46,8 +46,8 @@ const SingleFeature = () => {
 
   const navigation: StackNavigationProp<any> = useNavigation();
   return (
-    <View>
-      {loading && <ActivityIndicator color={"blue"} size={"large"} />}
+    <View style={styles.container}>
+      {loading && <ActivityIndicator color={"blue"} size={"large"} style={styles.spinner} />}
       {!loading && (
         <>
           <Text style={styles.featureTitle}>{foundFeature?.properties.place}</Text>
@@ -115,6 +115,12 @@ const SingleFeature = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  spinner: {
+    marginTop: 20,
+  },
   featureTitle: {
     textAlign: "center",
     fontSize: 20,
