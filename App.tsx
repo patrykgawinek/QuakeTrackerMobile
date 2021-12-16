@@ -84,7 +84,7 @@ const App = () => {
             <Stack.Navigator initialRouteName="Earthquakes">
               <Stack.Screen name="Search Earthquakes" component={SearchForm} />
               <Stack.Screen name="Found Earthquakes" component={FoundFeatures} />
-              <Stack.Screen name="Last Selected Eartquake" component={SingleFeature} />
+              <Stack.Screen name="Last Selected Earthquake" component={SingleFeature} />
             </Stack.Navigator>
           </NavigationContainer>
         </SingleFeatureContext.Provider>
