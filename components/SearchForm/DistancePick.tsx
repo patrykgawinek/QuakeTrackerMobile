@@ -19,10 +19,14 @@ const DistancePick = ({
     if (text === "") {
       text = "0";
     }
+    let distance: number = parseInt(text.replace(/[^0-9]/g, ""));
+    if (distance > 20001) {
+      distance = 20001;
+    }
     setCircleDistance({
       latitude: 55,
       longitude: 5,
-      distance: parseInt(text.replace(/[^0-9]/g, "")),
+      distance: distance,
     });
   };
 

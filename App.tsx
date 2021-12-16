@@ -11,7 +11,7 @@ import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
 
-const Stack = createDrawerNavigator();
+const Drawer = createDrawerNavigator();
 
 const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
@@ -80,11 +80,11 @@ const App = () => {
           }}
         >
           <NavigationContainer>
-            <Stack.Navigator initialRouteName="Earthquakes">
-              <Stack.Screen name="Search Earthquakes" component={SearchForm} />
-              <Stack.Screen name="Found Earthquakes" component={FoundFeatures} />
-              <Stack.Screen name="Last Selected Earthquake" component={SingleFeature} />
-            </Stack.Navigator>
+            <Drawer.Navigator initialRouteName="Earthquakes">
+              <Drawer.Screen name="Search Earthquakes" component={SearchForm} />
+              <Drawer.Screen name="Found Earthquakes" component={FoundFeatures} />
+              <Drawer.Screen name="Last Selected Earthquake" component={SingleFeature} />
+            </Drawer.Navigator>
           </NavigationContainer>
         </SingleFeatureContext.Provider>
       </FoundFeaturesContext.Provider>
