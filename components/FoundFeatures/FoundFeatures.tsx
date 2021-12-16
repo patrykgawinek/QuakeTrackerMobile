@@ -14,8 +14,7 @@ const FoundFeatures = () => {
     alertLevel,
     setSelectedFeature,
   } = useContext(FoundFeaturesContext);
-  const [earthquakeData, setEarthquakeData] =
-    useState<AxiosResponse<any, any>>();
+  const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
   useEffect(() => {
     axios
       .get(`${baseUrlApi}/fdsnws/event/1/query`, {
@@ -28,6 +27,8 @@ const FoundFeatures = () => {
           maxradiuskm: circleDistance.distance,
           maxmagnitude: magnitudeRange.maximum,
           minmagnitude: magnitudeRange.minimum,
+          alertlevel:
+            alertLevel === AlertLevel.All ? "" : AlertLevel[alertLevel].toString().toLowerCase(),
         },
       })
       .then((response) => {
@@ -36,7 +37,7 @@ const FoundFeatures = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [earthquakeInterval]); //Track changes on date interval
+  }, [earthquakeInterval, circleDistance, magnitudeRange, alertLevel]); //Track changes on date interval
 
   return (
     <View>
@@ -45,8 +46,7 @@ const FoundFeatures = () => {
           <View style={styles.featureContainer} key={feature.id}>
             <Text>Place: {feature.properties.place}</Text>
             <Text>
-              Magnitude(type {feature.properties.magType}):{" "}
-              {feature.properties.mag}
+              Magnitude(type {feature.properties.magType}): {feature.properties.mag}
             </Text>
             <Text
               style={{ color: "blue" }}

@@ -15,6 +15,7 @@ export interface MagnitudeRange {
 }
 
 export enum AlertLevel {
+  "All",
   "Green",
   "Yellow",
   "Orange",

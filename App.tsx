@@ -42,7 +42,6 @@ const App = () => {
       }
 
       let location = await Location.getCurrentPositionAsync({ accuracy: 3 });
-      console.log(location);
       setCircleDistance({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
