@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Linking, StyleSheet, Text, View } from "react-native";
@@ -36,6 +38,7 @@ const SingleFeature = () => {
       });
   }, [selectedFeature]);
 
+  const navigation: StackNavigationProp<any> = useNavigation();
   return (
     <View>
       <Text style={styles.featureTitle}>{foundFeature?.properties.place}</Text>
@@ -89,7 +92,7 @@ const SingleFeature = () => {
       </View>
       <View style={styles.buttonView}>
         <Button
-          onPress={() => Linking.openURL(`${foundFeature?.properties.url}`)}
+          onPress={() => navigation.navigate("USGS Webview")}
           title="Visit USGS Website"
           accessibilityLabel="Visit USGS Website"
         />

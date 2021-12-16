@@ -13,6 +13,7 @@ import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
 import HomeMap from "./components/HomeMap/HomeMap";
 import { HomeMapContext } from "./context/HomeMapContext";
+import FeatureWebView from "./components/FeatureWebView/FeatureWebView";
 
 const Drawer = createDrawerNavigator();
 
@@ -120,6 +121,15 @@ const App = () => {
                 <Drawer.Screen name="Search Earthquakes" component={SearchForm} />
                 <Drawer.Screen name="Found Earthquakes" component={FoundFeatures} />
                 <Drawer.Screen name="Last Selected Earthquake" component={SingleFeature} />
+                <Drawer.Screen
+                  name="USGS Webview"
+                  component={FeatureWebView}
+                  options={{
+                    drawerLabel: () => null,
+                    title: undefined,
+                    drawerIcon: () => null,
+                  }}
+                />
               </Drawer.Navigator>
             </NavigationContainer>
           </SingleFeatureContext.Provider>
