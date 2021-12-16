@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Linking, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Button, Linking, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SingleFeatureContext } from "../context/SingleFeatureContext";
 
@@ -22,7 +22,9 @@ const SingleFeature = () => {
     geometry: { coordinates: [0, 0] },
   });
 
-  useEffect(() => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const getFeatureData = async () => {
+    setLoading(true);
     axios
       .get(`${baseUrlApi}/fdsnws/event/1/query`, {
         params: {
@@ -32,73 +34,82 @@ const SingleFeature = () => {
       })
       .then((response) => {
         setFoundFeature(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+  useEffect(() => {
+    getFeatureData();
   }, [selectedFeature]);
 
   const navigation: StackNavigationProp<any> = useNavigation();
   return (
     <View>
-      <Text style={styles.featureTitle}>{foundFeature?.properties.place}</Text>
-      <Text style={styles.featureTime}>
-        {new Date(foundFeature?.properties.time).toUTCString()}
-      </Text>
-      <View style={styles.mapContainer}>
-        <MapView
-          style={styles.map}
-          showsUserLocation={true}
-          region={{
-            latitude: foundFeature?.geometry.coordinates[1],
-            longitude: foundFeature?.geometry.coordinates[0],
-            latitudeDelta: 50,
-            longitudeDelta: 50,
-          }}
-        >
-          <Marker
-            coordinate={{
-              latitude: foundFeature?.geometry.coordinates[1],
-              longitude: foundFeature?.geometry.coordinates[0],
-            }}
-            title={foundFeature?.properties.title}
-            description={`Last updated: ${new Date(
-              foundFeature?.properties.updated
-            ).toUTCString()}`}
-          />
-        </MapView>
-      </View>
-      <View style={styles.featureData}>
-        <View style={styles.propertyContainer}>
-          <Text style={styles.propertyText}>Coordinates</Text>
-          <Text style={styles.propertyText}>
-            {foundFeature?.geometry.coordinates[0]}, {foundFeature?.geometry.coordinates[1]}
+      {loading && <ActivityIndicator color={"blue"} size={"large"} />}
+      {!loading && (
+        <>
+          <Text style={styles.featureTitle}>{foundFeature?.properties.place}</Text>
+          <Text style={styles.featureTime}>
+            {new Date(foundFeature?.properties.time).toUTCString()}
           </Text>
-        </View>
-        <View style={styles.propertyContainer}>
-          <Text style={styles.propertyText}>Magnitude</Text>
-          <Text style={styles.propertyText}>
-            {foundFeature?.properties.mag} {foundFeature?.properties.magType}
-          </Text>
-        </View>
-        <View style={styles.propertyContainer}>
-          <Text style={styles.propertyText}>Alert Level</Text>
-          <Text style={styles.propertyText}>{foundFeature?.properties.alert || "None"}</Text>
-        </View>
-        <View style={styles.propertyContainer}>
-          <Text style={styles.propertyText}>Significance</Text>
-          <Text style={styles.propertyText}>{foundFeature?.properties.sig}</Text>
-        </View>
-      </View>
-      <View style={styles.buttonView}>
-        <Button
-          title="Visit USGS Website"
-          accessibilityLabel="Visit USGS Website"
-          onPress={() => {
-            navigation.navigate("USGS Webview");
-          }}
-        />
-      </View>
+          <View style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              showsUserLocation={true}
+              region={{
+                latitude: foundFeature?.geometry.coordinates[1],
+                longitude: foundFeature?.geometry.coordinates[0],
+                latitudeDelta: 50,
+                longitudeDelta: 50,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: foundFeature?.geometry.coordinates[1],
+                  longitude: foundFeature?.geometry.coordinates[0],
+                }}
+                title={foundFeature?.properties.title}
+                description={`Last updated: ${new Date(
+                  foundFeature?.properties.updated
+                ).toUTCString()}`}
+              />
+            </MapView>
+          </View>
+          <View style={styles.featureData}>
+            <View style={styles.propertyContainer}>
+              <Text style={styles.propertyText}>Coordinates</Text>
+              <Text style={styles.propertyText}>
+                {foundFeature?.geometry.coordinates[0]}, {foundFeature?.geometry.coordinates[1]}
+              </Text>
+            </View>
+            <View style={styles.propertyContainer}>
+              <Text style={styles.propertyText}>Magnitude</Text>
+              <Text style={styles.propertyText}>
+                {foundFeature?.properties.mag} {foundFeature?.properties.magType}
+              </Text>
+            </View>
+            <View style={styles.propertyContainer}>
+              <Text style={styles.propertyText}>Alert Level</Text>
+              <Text style={styles.propertyText}>{foundFeature?.properties.alert || "None"}</Text>
+            </View>
+            <View style={styles.propertyContainer}>
+              <Text style={styles.propertyText}>Significance</Text>
+              <Text style={styles.propertyText}>{foundFeature?.properties.sig}</Text>
+            </View>
+          </View>
+          <View style={styles.buttonView}>
+            <Button
+              title="Visit USGS Website"
+              accessibilityLabel="Visit USGS Website"
+              onPress={() => {
+                navigation.navigate("USGS Webview");
+              }}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };
