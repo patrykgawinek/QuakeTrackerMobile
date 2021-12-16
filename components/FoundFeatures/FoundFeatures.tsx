@@ -3,10 +3,19 @@ import React, { useContext, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../../context/FoundFeaturesContext";
+import { AlertLevel } from "../../types";
 
 const FoundFeatures = () => {
-  const { baseUrlApi, earthquakeInterval } = useContext(FoundFeaturesContext);
-  const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
+  const {
+    baseUrlApi,
+    earthquakeInterval,
+    circleDistance,
+    magnitudeRange,
+    alertLevel,
+    setSelectedFeature,
+  } = useContext(FoundFeaturesContext);
+  const [earthquakeData, setEarthquakeData] =
+    useState<AxiosResponse<any, any>>();
   useEffect(() => {
     axios
       .get(`${baseUrlApi}/fdsnws/event/1/query`, {
@@ -14,6 +23,11 @@ const FoundFeatures = () => {
           format: "geojson",
           starttime: earthquakeInterval.since.toUTCString(),
           endtime: earthquakeInterval.to.toUTCString(),
+          latitude: circleDistance.latitude,
+          longitude: circleDistance.longitude,
+          maxradiuskm: circleDistance.distance,
+          maxmagnitude: magnitudeRange.maximum,
+          minmagnitude: magnitudeRange.minimum,
         },
       })
       .then((response) => {
@@ -31,7 +45,8 @@ const FoundFeatures = () => {
           <View style={styles.featureContainer} key={feature.id}>
             <Text>Place: {feature.properties.place}</Text>
             <Text>
-              Magnitude(type {feature.properties.magType}): {feature.properties.mag}
+              Magnitude(type {feature.properties.magType}):{" "}
+              {feature.properties.mag}
             </Text>
             <Text
               style={{ color: "blue" }}
