@@ -11,6 +11,8 @@ import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./type
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
+import HomeMap from "./components/HomeMap/HomeMap";
+import { HomeMapContext } from "./context/HomeMapContext";
 
 const Drawer = createDrawerNavigator();
 
@@ -77,44 +79,53 @@ const App = () => {
   }, []);
 
   return (
-    <SearchFeaturesContext.Provider
+    <HomeMapContext.Provider
       value={{
-        earthquakeInterval,
-        setEarthquakeInterval,
+        baseUrlApi,
         circleDistance,
-        setCircleDistance,
-        magnitudeRange,
-        setMagnitudeRange,
-        alertLevel,
-        setAlertLevel,
+        setSelectedFeature,
       }}
     >
-      <FoundFeaturesContext.Provider
+      <SearchFeaturesContext.Provider
         value={{
-          baseUrlApi: baseUrlApi,
-          earthquakeInterval: earthquakeInterval,
-          circleDistance: circleDistance,
-          magnitudeRange: magnitudeRange,
-          setSelectedFeature: setSelectedFeature,
+          earthquakeInterval,
+          setEarthquakeInterval,
+          circleDistance,
+          setCircleDistance,
+          magnitudeRange,
+          setMagnitudeRange,
           alertLevel,
+          setAlertLevel,
         }}
       >
-        <SingleFeatureContext.Provider
+        <FoundFeaturesContext.Provider
           value={{
-            baseUrlApi,
-            selectedFeature,
+            baseUrlApi: baseUrlApi,
+            earthquakeInterval: earthquakeInterval,
+            circleDistance: circleDistance,
+            magnitudeRange: magnitudeRange,
+            setSelectedFeature: setSelectedFeature,
+            alertLevel,
           }}
         >
-          <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Earthquakes">
-              <Drawer.Screen name="Search Earthquakes" component={SearchForm} />
-              <Drawer.Screen name="Found Earthquakes" component={FoundFeatures} />
-              <Drawer.Screen name="Last Selected Earthquake" component={SingleFeature} />
-            </Drawer.Navigator>
-          </NavigationContainer>
-        </SingleFeatureContext.Provider>
-      </FoundFeaturesContext.Provider>
-    </SearchFeaturesContext.Provider>
+          <SingleFeatureContext.Provider
+            value={{
+              baseUrlApi,
+              selectedFeature,
+            }}
+          >
+            <NavigationContainer>
+              <Drawer.Navigator initialRouteName="Earthquakes">
+                <Drawer.Screen name="Home" component={HomeMap} />
+                <Drawer.Screen name="Search Earthquakes" component={SearchForm} />
+                <Drawer.Screen name="Found Earthquakes" component={FoundFeatures} />
+                <Drawer.Screen name="Last Selected Earthquake" component={SingleFeature} />
+              </Drawer.Navigator>
+            </NavigationContainer>
+          </SingleFeatureContext.Provider>
+        </FoundFeaturesContext.Provider>
+      </SearchFeaturesContext.Provider>
+    </HomeMapContext.Provider>
   );
 };
 

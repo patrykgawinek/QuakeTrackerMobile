@@ -45,6 +45,7 @@ const SingleFeature = () => {
       <View style={styles.mapContainer}>
         <MapView
           style={styles.map}
+          showsUserLocation={true}
           region={{
             latitude: foundFeature?.geometry.coordinates[1],
             longitude: foundFeature?.geometry.coordinates[0],
