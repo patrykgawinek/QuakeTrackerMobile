@@ -1,6 +1,14 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Linking, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../../context/FoundFeaturesContext";
 import { AlertLevel } from "../../types";
@@ -14,7 +22,9 @@ const FoundFeatures = () => {
     alertLevel,
     setSelectedFeature,
   } = useContext(FoundFeaturesContext);
-  const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
+  const [earthquakeData, setEarthquakeData] =
+    useState<AxiosResponse<any, any>>();
+  const navigation: StackNavigationProp<any> = useNavigation();
   useEffect(() => {
     axios
       .get(`${baseUrlApi}/fdsnws/event/1/query`, {
@@ -28,7 +38,9 @@ const FoundFeatures = () => {
           maxmagnitude: magnitudeRange.maximum,
           minmagnitude: magnitudeRange.minimum,
           alertlevel:
-            alertLevel === AlertLevel.All ? "" : AlertLevel[alertLevel].toString().toLowerCase(),
+            alertLevel === AlertLevel.All
+              ? ""
+              : AlertLevel[alertLevel].toString().toLowerCase(),
         },
       })
       .then((response) => {
@@ -39,21 +51,25 @@ const FoundFeatures = () => {
       });
   }, [earthquakeInterval, circleDistance, magnitudeRange, alertLevel]); //Track changes on date interval
 
+  const handleSelectEarthquake = (id: string) => {
+    setSelectedFeature(id);
+    navigation.navigate("Last Selected Earthquake");
+  };
   return (
     <View>
       <ScrollView>
         {earthquakeData?.data.features.map((feature: any) => (
           <View style={styles.featureContainer} key={feature.id}>
-            <Text>Place: {feature.properties.place}</Text>
-            <Text>
-              Magnitude(type {feature.properties.magType}): {feature.properties.mag}
-            </Text>
-            <Text
-              style={{ color: "blue" }}
-              onPress={() => Linking.openURL(`${feature.properties.url}`)}
+            <TouchableOpacity
+              onPress={() => handleSelectEarthquake(feature.id)}
             >
-              Click here for event details
-            </Text>
+              <Text>Place: {feature.properties.place}</Text>
+              <Text>
+                Magnitude(type {feature.properties.magType}):{" "}
+                {feature.properties.mag}
+              </Text>
+              <Text>Alert level: {feature.properties.alert}</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
