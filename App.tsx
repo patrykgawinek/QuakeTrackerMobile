@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import FoundFeatures from "./components/FoundFeatures/FoundFeatures";
-import SingleFeature from "./components/SingleFeature/SingleFeature";
-import SearchForm from "./components/SearchForm/SearchForm";
+import FoundFeatures from "./screens/FoundFeatures";
+import SingleFeature from "./screens/SingleFeature";
+import SearchForm from "./screens/SearchForm/SearchForm";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,9 +11,9 @@ import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./type
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
-import HomeMap from "./components/HomeMap/HomeMap";
+import HomeMap from "./screens/HomeMap";
 import { HomeMapContext } from "./context/HomeMapContext";
-import FeatureWebView from "./components/FeatureWebView/FeatureWebView";
+import FeatureWebView from "./screens/FeatureWebView";
 
 const Drawer = createDrawerNavigator();
 

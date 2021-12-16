@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
-import { SingleFeatureContext } from "../../context/SingleFeatureContext";
+import { SingleFeatureContext } from "../context/SingleFeatureContext";
 
 interface FeatureWebViewProps {
   url: string;

@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
-import { HomeMapContext } from "../../context/HomeMapContext";
+import { HomeMapContext } from "../context/HomeMapContext";
 
 const HomeMap = () => {
   const { baseUrlApi, circleDistance, setSelectedFeature } = useContext(HomeMapContext);

@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Linking, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { SingleFeatureContext } from "../../context/SingleFeatureContext";
+import { SingleFeatureContext } from "../context/SingleFeatureContext";
 
 const SingleFeature = () => {
   const { baseUrlApi, selectedFeature } = useContext(SingleFeatureContext);
@@ -92,9 +92,11 @@ const SingleFeature = () => {
       </View>
       <View style={styles.buttonView}>
         <Button
-          onPress={() => navigation.navigate("USGS Webview")}
           title="Visit USGS Website"
           accessibilityLabel="Visit USGS Website"
+          onPress={() => {
+            navigation.navigate("USGS Webview");
+          }}
         />
       </View>
     </View>
