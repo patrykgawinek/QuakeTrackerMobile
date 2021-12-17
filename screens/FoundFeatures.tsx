@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Linking, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../context/FoundFeaturesContext";
 import { AlertLevel } from "../types";
@@ -18,7 +18,9 @@ const FoundFeatures = () => {
   } = useContext(FoundFeaturesContext);
   const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
   const navigation: StackNavigationProp<any> = useNavigation();
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${baseUrlApi}/fdsnws/event/1/query`, {
         params: {
@@ -36,6 +38,7 @@ const FoundFeatures = () => {
       })
       .then((response) => {
         setEarthquakeData(response);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -48,24 +51,31 @@ const FoundFeatures = () => {
   };
   return (
     <View>
-      <ScrollView>
-        {earthquakeData?.data.features.map((feature: any) => (
-          <View style={styles.featureContainer} key={feature.id}>
-            <TouchableOpacity onPress={() => handleSelectEarthquake(feature.id)}>
-              <Text>Place: {feature.properties.place}</Text>
-              <Text>
-                Magnitude(type {feature.properties.magType}): {feature.properties.mag}
-              </Text>
-              <Text>Alert level: {feature.properties.alert}</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
+      {loading ? (
+        <ActivityIndicator color={"blue"} size={"large"} style={styles.spinner} />
+      ) : (
+        <ScrollView>
+          {earthquakeData?.data.features.map((feature: any) => (
+            <View style={styles.featureContainer} key={feature.id}>
+              <TouchableOpacity onPress={() => handleSelectEarthquake(feature.id)}>
+                <Text>Place: {feature.properties.place}</Text>
+                <Text>
+                  Magnitude(type {feature.properties.magType}): {feature.properties.mag}
+                </Text>
+                <Text>Alert level: {feature.properties.alert}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  spinner: {
+    marginTop: 20,
+  },
   featureContainer: {
     alignSelf: "stretch",
     margin: 10,
