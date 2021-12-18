@@ -2,13 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../context/FoundFeaturesContext";
 import { AlertLevel } from "../types";
@@ -48,6 +42,7 @@ const FoundFeatures = () => {
     let response = await axios.get(`${baseUrlApi}/fdsnws/event/1/query`, {
       params: {
         format: "geojson",
+        limit: 250,
         starttime: earthquakeInterval.since.toUTCString(),
         endtime: earthquakeInterval.to.toUTCString(),
         latitude: circleDistance.latitude,
@@ -56,21 +51,16 @@ const FoundFeatures = () => {
         maxmagnitude: magnitudeRange.maximum,
         minmagnitude: magnitudeRange.minimum,
         alertlevel:
-          alertLevel === AlertLevel.All
-            ? ""
-            : AlertLevel[alertLevel].toString().toLowerCase(),
+          alertLevel === AlertLevel.All ? "" : AlertLevel[alertLevel].toString().toLowerCase(),
       },
     });
     setEarthquakeData(response.data.features);
     setLoading(false);
   };
 
-  useEffect(() => {}, [
-    earthquakeInterval,
-    circleDistance,
-    magnitudeRange,
-    alertLevel,
-  ]); //Track changes on date interval
+  useEffect(() => {
+    refresh();
+  }, [earthquakeInterval, circleDistance, magnitudeRange, alertLevel]); //Track changes on date interval
 
   const handleSelectEarthquake = (id: string) => {
     setSelectedFeature(id);
@@ -79,21 +69,14 @@ const FoundFeatures = () => {
   return (
     <View>
       {loading ? (
-        <ActivityIndicator
-          color={"blue"}
-          size={"large"}
-          style={styles.spinner}
-        />
+        <ActivityIndicator color={"blue"} size={"large"} style={styles.spinner} />
       ) : (
         <FlatList
           refreshing={loading}
           onRefresh={refresh}
           data={earthquakeData}
           renderItem={({ item }) => (
-            <ListItem
-              feature={item}
-              handleSelectEarthquake={handleSelectEarthquake}
-            />
+            <ListItem feature={item} handleSelectEarthquake={handleSelectEarthquake} />
           )}
         ></FlatList>
       )}

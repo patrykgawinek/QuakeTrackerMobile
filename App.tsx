@@ -7,12 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
-import {
-  AlertLevel,
-  CircleDistance,
-  MagnitudeRange,
-  TimeInterval,
-} from "./types";
+import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./types";
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
@@ -58,13 +53,13 @@ const App = () => {
   const [circleDistance, setCircleDistance] = useState<CircleDistance>({
     latitude: 55,
     longitude: 5,
-    distance: 100,
+    distance: 500,
   });
   const [magnitudeRange, setMagnitudeRange] = useState<MagnitudeRange>({
     minimum: -1,
     maximum: 10,
   });
-  const [alertLevel, setAlertLevel] = useState<AlertLevel>(AlertLevel.Green);
+  const [alertLevel, setAlertLevel] = useState<AlertLevel>(AlertLevel.All);
 
   const [selectedFeature, setSelectedFeature] = useState<string>("");
   //Read last selected on mount
@@ -84,10 +79,7 @@ const App = () => {
   //Save last selected
   const storeSelectedFeature = async () => {
     try {
-      await AsyncStorage.setItem(
-        "selectedFeature",
-        JSON.stringify(selectedFeature)
-      );
+      await AsyncStorage.setItem("selectedFeature", JSON.stringify(selectedFeature));
     } catch (e) {
       console.log("Something went wrong when getting data from storage!");
     }
@@ -157,14 +149,8 @@ const App = () => {
                 }}
               >
                 <Drawer.Screen name="Map" component={HomeStackNav} />
-                <Drawer.Screen
-                  name="Find Earthquakes"
-                  component={SearchStackNav}
-                />
-                <Drawer.Screen
-                  name="Last Selected Earthquake"
-                  component={DetailStackNav}
-                />
+                <Drawer.Screen name="Find Earthquakes" component={SearchStackNav} />
+                <Drawer.Screen name="Last Selected Earthquake" component={DetailStackNav} />
               </Drawer.Navigator>
             </NavigationContainer>
           </SingleFeatureContext.Provider>
