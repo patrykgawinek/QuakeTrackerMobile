@@ -2,10 +2,33 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import axios, { AxiosResponse } from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../context/FoundFeaturesContext";
 import { AlertLevel } from "../types";
+
+interface ListItemProps {
+  feature: any;
+  handleSelectEarthquake: (id: string) => void;
+}
+
+const ListItem = ({ handleSelectEarthquake, feature }: ListItemProps) => {
+  return (
+    <TouchableOpacity onPress={() => handleSelectEarthquake(feature.id)}>
+      <Text>Place: {feature.properties.place}</Text>
+      <Text>
+        Magnitude(type {feature.properties.magType}): {feature.properties.mag}
+      </Text>
+      <Text>Alert level: {feature.properties.alert}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const FoundFeatures = () => {
   const {
@@ -16,34 +39,38 @@ const FoundFeatures = () => {
     alertLevel,
     setSelectedFeature,
   } = useContext(FoundFeaturesContext);
-  const [earthquakeData, setEarthquakeData] = useState<AxiosResponse<any, any>>();
+  const [earthquakeData, setEarthquakeData] = useState<any>();
   const navigation: StackNavigationProp<any> = useNavigation();
   const [loading, setLoading] = useState<boolean>(false);
-  useEffect(() => {
+
+  const refresh = async () => {
     setLoading(true);
-    axios
-      .get(`${baseUrlApi}/fdsnws/event/1/query`, {
-        params: {
-          format: "geojson",
-          starttime: earthquakeInterval.since.toUTCString(),
-          endtime: earthquakeInterval.to.toUTCString(),
-          latitude: circleDistance.latitude,
-          longitude: circleDistance.longitude,
-          maxradiuskm: circleDistance.distance,
-          maxmagnitude: magnitudeRange.maximum,
-          minmagnitude: magnitudeRange.minimum,
-          alertlevel:
-            alertLevel === AlertLevel.All ? "" : AlertLevel[alertLevel].toString().toLowerCase(),
-        },
-      })
-      .then((response) => {
-        setEarthquakeData(response);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [earthquakeInterval, circleDistance, magnitudeRange, alertLevel]); //Track changes on date interval
+    let response = await axios.get(`${baseUrlApi}/fdsnws/event/1/query`, {
+      params: {
+        format: "geojson",
+        starttime: earthquakeInterval.since.toUTCString(),
+        endtime: earthquakeInterval.to.toUTCString(),
+        latitude: circleDistance.latitude,
+        longitude: circleDistance.longitude,
+        maxradiuskm: circleDistance.distance,
+        maxmagnitude: magnitudeRange.maximum,
+        minmagnitude: magnitudeRange.minimum,
+        alertlevel:
+          alertLevel === AlertLevel.All
+            ? ""
+            : AlertLevel[alertLevel].toString().toLowerCase(),
+      },
+    });
+    setEarthquakeData(response.data.features);
+    setLoading(false);
+  };
+
+  useEffect(() => {}, [
+    earthquakeInterval,
+    circleDistance,
+    magnitudeRange,
+    alertLevel,
+  ]); //Track changes on date interval
 
   const handleSelectEarthquake = (id: string) => {
     setSelectedFeature(id);
@@ -52,21 +79,23 @@ const FoundFeatures = () => {
   return (
     <View>
       {loading ? (
-        <ActivityIndicator color={"blue"} size={"large"} style={styles.spinner} />
+        <ActivityIndicator
+          color={"blue"}
+          size={"large"}
+          style={styles.spinner}
+        />
       ) : (
-        <ScrollView>
-          {earthquakeData?.data.features.map((feature: any) => (
-            <View style={styles.featureContainer} key={feature.id}>
-              <TouchableOpacity onPress={() => handleSelectEarthquake(feature.id)}>
-                <Text>Place: {feature.properties.place}</Text>
-                <Text>
-                  Magnitude(type {feature.properties.magType}): {feature.properties.mag}
-                </Text>
-                <Text>Alert level: {feature.properties.alert}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </ScrollView>
+        <FlatList
+          refreshing={loading}
+          onRefresh={refresh}
+          data={earthquakeData}
+          renderItem={({ item }) => (
+            <ListItem
+              feature={item}
+              handleSelectEarthquake={handleSelectEarthquake}
+            />
+          )}
+        ></FlatList>
       )}
     </View>
   );
@@ -88,3 +117,6 @@ const styles = StyleSheet.create({
 });
 
 export default FoundFeatures;
+function async() {
+  throw new Error("Function not implemented.");
+}
