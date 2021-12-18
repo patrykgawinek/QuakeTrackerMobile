@@ -14,8 +14,49 @@ import { SingleFeatureContext } from "./context/SingleFeatureContext";
 import HomeMap from "./screens/HomeMap";
 import { HomeMapContext } from "./context/HomeMapContext";
 import FeatureWebView from "./screens/FeatureWebView";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+
+const HomeStackNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Home" component={HomeMap} />
+    </Stack.Navigator>
+  );
+};
+const SearchStackNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Search"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Search" component={SearchForm} />
+      <Stack.Screen name="Found Earthquakes" component={FoundFeatures} />
+    </Stack.Navigator>
+  );
+};
+const DetailStackNav = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Details"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Details" component={SingleFeature} />
+      <Stack.Screen name="USGS Webpage" component={FeatureWebView} />
+    </Stack.Navigator>
+  );
+};
 
 const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
@@ -116,20 +157,10 @@ const App = () => {
             }}
           >
             <NavigationContainer>
-              <Drawer.Navigator initialRouteName="Earthquakes">
-                <Drawer.Screen name="Home" component={HomeMap} />
-                <Drawer.Screen name="Search Earthquakes" component={SearchForm} />
-                <Drawer.Screen name="Found Earthquakes" component={FoundFeatures} />
-                <Drawer.Screen name="Last Selected Earthquake" component={SingleFeature} />
-                <Drawer.Screen
-                  name="USGS Webview"
-                  component={FeatureWebView}
-                  options={{
-                    drawerLabel: () => null,
-                    title: undefined,
-                    drawerIcon: () => null,
-                  }}
-                />
+              <Drawer.Navigator initialRouteName="Map">
+                <Drawer.Screen name="Map" component={HomeStackNav} />
+                <Drawer.Screen name="Find Earthquakes" component={SearchStackNav} />
+                <Drawer.Screen name="Last Selected Earthquake" component={DetailStackNav} />
               </Drawer.Navigator>
             </NavigationContainer>
           </SingleFeatureContext.Provider>

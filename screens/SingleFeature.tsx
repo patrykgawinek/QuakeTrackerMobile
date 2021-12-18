@@ -104,7 +104,7 @@ const SingleFeature = () => {
               title="Visit USGS Website"
               accessibilityLabel="Visit USGS Website"
               onPress={() => {
-                navigation.navigate("USGS Webview");
+                navigation.navigate("USGS Webpage");
               }}
             />
           </View>
