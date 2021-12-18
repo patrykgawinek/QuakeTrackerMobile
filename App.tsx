@@ -7,7 +7,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
-import { AlertLevel, CircleDistance, MagnitudeRange, TimeInterval } from "./types";
+import {
+  AlertLevel,
+  CircleDistance,
+  MagnitudeRange,
+  TimeInterval,
+} from "./types";
 import { FoundFeaturesContext } from "./context/FoundFeaturesContext";
 import { SearchFeaturesContext } from "./context/SearchFeaturesContext";
 import { SingleFeatureContext } from "./context/SingleFeatureContext";
@@ -21,24 +26,14 @@ const Stack = createStackNavigator();
 
 const HomeStackNav = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" component={HomeMap} />
     </Stack.Navigator>
   );
 };
 const SearchStackNav = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Search"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator initialRouteName="Search">
       <Stack.Screen name="Search" component={SearchForm} />
       <Stack.Screen name="Found Earthquakes" component={FoundFeatures} />
     </Stack.Navigator>
@@ -46,12 +41,7 @@ const SearchStackNav = () => {
 };
 const DetailStackNav = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Details"
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator initialRouteName="Details">
       <Stack.Screen name="Details" component={SingleFeature} />
       <Stack.Screen name="USGS Webpage" component={FeatureWebView} />
     </Stack.Navigator>
@@ -94,7 +84,10 @@ const App = () => {
   //Save last selected
   const storeSelectedFeature = async () => {
     try {
-      await AsyncStorage.setItem("selectedFeature", JSON.stringify(selectedFeature));
+      await AsyncStorage.setItem(
+        "selectedFeature",
+        JSON.stringify(selectedFeature)
+      );
     } catch (e) {
       console.log("Something went wrong when getting data from storage!");
     }
@@ -157,10 +150,21 @@ const App = () => {
             }}
           >
             <NavigationContainer>
-              <Drawer.Navigator initialRouteName="Map">
+              <Drawer.Navigator
+                initialRouteName="Map"
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
                 <Drawer.Screen name="Map" component={HomeStackNav} />
-                <Drawer.Screen name="Find Earthquakes" component={SearchStackNav} />
-                <Drawer.Screen name="Last Selected Earthquake" component={DetailStackNav} />
+                <Drawer.Screen
+                  name="Find Earthquakes"
+                  component={SearchStackNav}
+                />
+                <Drawer.Screen
+                  name="Last Selected Earthquake"
+                  component={DetailStackNav}
+                />
               </Drawer.Navigator>
             </NavigationContainer>
           </SingleFeatureContext.Provider>
