@@ -100,6 +100,3 @@ const styles = StyleSheet.create({
 });
 
 export default FoundFeatures;
-function async() {
-  throw new Error("Function not implemented.");
-}
