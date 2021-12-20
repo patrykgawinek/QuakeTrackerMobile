@@ -5,21 +5,38 @@ import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Button, Linking, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { SingleFeatureContext } from "../context/SingleFeatureContext";
+import { Feature } from "../types";
 
 const SingleFeature = () => {
   const { baseUrlApi, selectedFeature } = useContext(SingleFeatureContext);
-  const [foundFeature, setFoundFeature] = useState<any>({
+  const [foundFeature, setFoundFeature] = useState<Feature>({
+    type: "",
     properties: {
-      title: "",
+      mag: 0,
       place: "",
       time: "",
-      mag: 0,
-      magType: "mg",
-      alert: "none",
-      sig: 0,
+      updated: "",
       url: "",
+      detail: "",
+      alert: "",
+      status: "",
+      tsunami: 0,
+      sig: 0,
+      net: "",
+      code: "",
+      ids: "",
+      sources: "",
+      types: "",
+      rms: 0,
+      magType: "",
+      type: "",
+      title: "",
     },
-    geometry: { coordinates: [0, 0] },
+    geometry: {
+      type: "Point",
+      coordinates: [0, 0],
+    },
+    id: "",
   });
 
   const [loading, setLoading] = useState<boolean>(false);

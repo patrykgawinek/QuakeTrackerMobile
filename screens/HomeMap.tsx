@@ -5,24 +5,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import MapView, { Callout, Marker } from "react-native-maps";
 import { HomeMapContext } from "../context/HomeMapContext";
+import { Feature } from "../types";
 
 const HomeMap = () => {
   const { baseUrlApi, circleDistance, setSelectedFeature } = useContext(HomeMapContext);
-  const [featuresList, setFeaturesList] = useState<any>([
-    {
-      properties: {
-        title: "",
-        place: "",
-        time: "",
-        mag: 0,
-        magType: "mg",
-        alert: "none",
-        sig: 0,
-        url: "",
-      },
-      geometry: { coordinates: [0, 0] },
-    },
-  ]);
+  const [featuresList, setFeaturesList] = useState<Feature[]>([]);
 
   useEffect(() => {
     axios
@@ -53,7 +40,7 @@ const HomeMap = () => {
           longitudeDelta: 50,
         }}
       >
-        {featuresList.map((feature: any, index: number) => {
+        {featuresList.map((feature: Feature, index: number) => {
           return (
             feature.geometry !== undefined && (
               <Marker

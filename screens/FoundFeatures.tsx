@@ -12,31 +12,22 @@ import {
 } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../context/FoundFeaturesContext";
-import { AlertLevel } from "../types";
+import { AlertLevel, Feature } from "../types";
 
 interface ListItemProps {
-  feature: any;
+  feature: Feature;
   handleSelectEarthquake: (id: string) => void;
   style: ViewStyle;
 }
 
-const ListItem = ({
-  handleSelectEarthquake,
-  feature,
-  style,
-}: ListItemProps) => {
+const ListItem = ({ handleSelectEarthquake, feature, style }: ListItemProps) => {
   return (
-    <TouchableOpacity
-      onPress={() => handleSelectEarthquake(feature.id)}
-      style={style}
-    >
+    <TouchableOpacity onPress={() => handleSelectEarthquake(feature.id)} style={style}>
       <Text style={styles.cardTitle}>Place: {feature.properties.place}</Text>
       <Text style={styles.cardText}>
         Magnitude(type {feature.properties.magType}): {feature.properties.mag}
       </Text>
-      <Text style={styles.cardText}>
-        Alert level: {feature.properties.alert}
-      </Text>
+      <Text style={styles.cardText}>Alert level: {feature.properties.alert}</Text>
     </TouchableOpacity>
   );
 };
@@ -50,7 +41,7 @@ const FoundFeatures = () => {
     alertLevel,
     setSelectedFeature,
   } = useContext(FoundFeaturesContext);
-  const [earthquakeData, setEarthquakeData] = useState<any>();
+  const [earthquakeData, setEarthquakeData] = useState<Feature[]>();
   const navigation: StackNavigationProp<any> = useNavigation();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -68,9 +59,7 @@ const FoundFeatures = () => {
         maxmagnitude: magnitudeRange.maximum,
         minmagnitude: magnitudeRange.minimum,
         alertlevel:
-          alertLevel === AlertLevel.All
-            ? ""
-            : AlertLevel[alertLevel].toString().toLowerCase(),
+          alertLevel === AlertLevel.All ? "" : AlertLevel[alertLevel].toString().toLowerCase(),
       },
     });
     setEarthquakeData(response.data.features);
@@ -88,11 +77,7 @@ const FoundFeatures = () => {
   return (
     <View>
       {loading ? (
-        <ActivityIndicator
-          color={"blue"}
-          size={"large"}
-          style={styles.spinner}
-        />
+        <ActivityIndicator color={"blue"} size={"large"} style={styles.spinner} />
       ) : (
         <FlatList
           refreshing={loading}
