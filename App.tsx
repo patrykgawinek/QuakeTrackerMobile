@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 const HomeStackNav = () => {
   return (
     <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={HomeMap} />
+      <Stack.Screen name="Past 24 hours" component={HomeMap} />
     </Stack.Navigator>
   );
 };
