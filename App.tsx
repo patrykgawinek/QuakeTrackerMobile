@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import FoundFeatures from "./screens/FoundFeatures";
 import SingleFeature from "./screens/SingleFeature";
 import SearchForm from "./screens/SearchForm/SearchForm";
@@ -15,6 +15,7 @@ import HomeMap from "./screens/HomeMap";
 import { HomeMapContext } from "./context/HomeMapContext";
 import FeatureWebView from "./screens/FeatureWebView";
 import { createStackNavigator } from "@react-navigation/stack";
+import {} from "react-native";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -44,8 +45,11 @@ const DetailStackNav = () => {
 };
 
 const App = () => {
-  const baseUrlApi: string = "https://earthquake.usgs.gov";
+  /* Used to set edge width of drawer */
+  const dimensions = useWindowDimensions();
 
+  /* Hooks used for app function */
+  const baseUrlApi: string = "https://earthquake.usgs.gov";
   const [earthquakeInterval, setEarthquakeInterval] = useState<TimeInterval>({
     since: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
     to: new Date(),
@@ -88,6 +92,7 @@ const App = () => {
     storeSelectedFeature();
   }, [selectedFeature]);
 
+  /* Read user location and set react hook */
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -146,6 +151,7 @@ const App = () => {
                 initialRouteName="Map"
                 screenOptions={{
                   headerShown: false,
+                  swipeEdgeWidth: dimensions.width,
                 }}
               >
                 <Drawer.Screen name="Map" component={HomeStackNav} />
