@@ -47,8 +47,8 @@ const App = () => {
   const baseUrlApi: string = "https://earthquake.usgs.gov";
 
   const [earthquakeInterval, setEarthquakeInterval] = useState<TimeInterval>({
-    since: new Date("2021-11-16"),
-    to: new Date("2021-11-17"),
+    since: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+    to: new Date(),
   });
   const [circleDistance, setCircleDistance] = useState<CircleDistance>({
     latitude: 55,
