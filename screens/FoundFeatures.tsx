@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -10,7 +10,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import { FoundFeaturesContext } from "../context/FoundFeaturesContext";
 import { AlertLevel, Feature } from "../types";
 
@@ -19,6 +19,10 @@ interface ListItemProps {
   handleSelectEarthquake: (id: string) => void;
   style: ViewStyle;
 }
+
+const NoDataFound = () => {
+  return <Text style={styles.NoDataFoundText}>No data found...</Text>;
+};
 
 const ListItem = ({ handleSelectEarthquake, feature, style }: ListItemProps) => {
   return (
@@ -83,6 +87,7 @@ const FoundFeatures = () => {
           refreshing={loading}
           onRefresh={refresh}
           data={earthquakeData}
+          ListEmptyComponent={NoDataFound}
           renderItem={({ item }) => (
             <ListItem
               style={styles.card}
@@ -121,6 +126,10 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 16,
+  },
+  NoDataFoundText: {
+    textAlign: "center",
+    marginTop: 3,
   },
 });
 
