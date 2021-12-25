@@ -83,6 +83,7 @@ const SingleFeature = () => {
               }}
             >
               <Marker
+                pinColor={"#1AA7EC"}
                 coordinate={{
                   latitude: foundFeature?.geometry.coordinates[1],
                   longitude: foundFeature?.geometry.coordinates[0],

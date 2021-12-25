@@ -45,6 +45,7 @@ const HomeMap = () => {
             feature.geometry !== undefined && (
               <Marker
                 key={index}
+                pinColor={"#1AA7EC"}
                 coordinate={{
                   latitude: feature.geometry.coordinates[1],
                   longitude: feature.geometry.coordinates[0],
